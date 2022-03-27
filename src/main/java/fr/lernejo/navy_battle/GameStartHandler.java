@@ -29,7 +29,6 @@ public class GameStartHandler implements HttpHandler {
         ObjectMapper objectMapper = new ObjectMapper();
 
         if (exchange.getRequestMethod().equals("POST")) {
-
             //JSON VALIDATION
             try (InputStream inputStream = getClass().getResourceAsStream("/valid_schema.json")) {
                 JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
@@ -40,12 +39,15 @@ public class GameStartHandler implements HttpHandler {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             }
 
+            String body = "{\"id\":\" " + this.id + "\", \"url\":\"http://localhost:" + this.port + "\", \"message\":\"May the best code win\"}";
+            exchange.getResponseHeaders().set("Content-type", "application/json");
+            exchange.sendResponseHeaders(202, body.length());
 
+            try (OutputStream os = exchange.getResponseBody()){
+                os.write(body.getBytes());
+            }
         } else {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
         }
-
-
-
     }
 }
