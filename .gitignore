@@ -4,3 +4,5 @@
 
 # bin files
 bin/
+# Maven
+target/
