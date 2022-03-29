@@ -11,7 +11,7 @@ public class Ping implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        String body = "SERVER WORKS !";
+        String body = "OK";
 
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, body.length());
 

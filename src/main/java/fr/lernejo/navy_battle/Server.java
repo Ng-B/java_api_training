@@ -12,10 +12,12 @@ import java.util.concurrent.Executors;
 public class Server {
     private final int prt_number;
     private final String id;
+    private final String URL;
 
-    public Server(String id, int prt_number) {
+    public Server(String id, int prt_number, String url) {
         this.id = id;
         this.prt_number = prt_number;
+        this.URL = url;
     }
 
     public void start() {
@@ -25,13 +27,18 @@ public class Server {
         try {
             HttpServer httpServer = HttpServer.create(socketAddress, 0);
             System.out.println("Server started on port number : " + prt_number);
-            GameStartHandler gameHandler = new GameStartHandler(this.id, this.prt_number);
 
             httpServer.setExecutor(executorService);
 
             httpServer.createContext("/ping", new Ping());
-            httpServer.createContext("/api/game/start", gameHandler);
+            httpServer.createContext("/api/game/start", new GameStartHandler(this.id, this.prt_number));
             httpServer.start();
+
+            if (!this.URL.equals("")) {
+                System.out.println("URL reception : CHECK");
+                Player plyr = new Player();
+                plyr.start(this.URL, this.id, this.prt_number);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
