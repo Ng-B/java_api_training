@@ -29,7 +29,7 @@ public class Server {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         try {
-            HttpServer httpServer = HttpServer.create(socketAddress, 0);
+            HttpServer httpServer = HttpServer.create(socketAddress, 1);
             System.out.println("Server started on port number : " + prt_number);
 
             httpServer.setExecutor(executorService);

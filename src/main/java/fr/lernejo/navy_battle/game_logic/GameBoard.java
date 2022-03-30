@@ -15,7 +15,6 @@ public class GameBoard {
     private final int HIT = 1;
     private final int MISS = 0;
     private final int SUNK = 99;
-
     private final int[][] board;
 
     public GameBoard(){
