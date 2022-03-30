@@ -1,6 +1,7 @@
 package fr.lernejo.navy_battle;
 
 import com.sun.net.httpserver.HttpServer;
+import fr.lernejo.navy_battle.game_logic.GameBoard;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,6 +14,7 @@ public class Server {
     private final int prt_number;
     private final String id;
     private final String URL;
+    private final GameBoard game = new GameBoard();
 
     public Server(String id, int prt_number, String url) {
         this.id = id;
@@ -21,6 +23,8 @@ public class Server {
     }
 
     public void start() {
+        game.buildBoard(); //creates game board
+
         InetSocketAddress socketAddress = new InetSocketAddress(prt_number);
         ExecutorService executorService = Executors.newFixedThreadPool(1);
 
@@ -31,7 +35,8 @@ public class Server {
             httpServer.setExecutor(executorService);
 
             httpServer.createContext("/ping", new Ping());
-            httpServer.createContext("/api/game/start", new GameStartHandler(this.id, this.prt_number));
+            httpServer.createContext("/api/game/start", new GameStartHandler(this.id, this.prt_number, this.game));
+            httpServer.createContext("/api/game/fire", new PlayerFireHandler(this.id, this.prt_number, this.game));
             httpServer.start();
 
             if (!this.URL.equals("")) {
